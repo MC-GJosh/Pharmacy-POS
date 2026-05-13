@@ -4,6 +4,19 @@
   </NuxtLayout>
 </template>
 
+<script setup>
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  const theme = localStorage.getItem('theme')
+  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
+})
+</script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -19,6 +32,24 @@
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+}
+
+html.dark {
+  --primary: #38bdf8;
+  --primary-hover: #7dd3fc;
+  --bg-app: #0f172a;
+  --bg-sidebar: #1e293b;
+  --bg-card: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 
 body {

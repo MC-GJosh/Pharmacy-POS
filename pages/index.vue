@@ -5,85 +5,82 @@
         <h1 class="page-title">Dashboard</h1>
         <p class="page-subtitle">Overview of today's pharmacy operations</p>
       </div>
-      <button class="btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
+      <UiAppButton variant="primary">
+        <template #prefix>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 18px; height: 18px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </template>
         New Sale
-      </button>
+      </UiAppButton>
     </div>
 
     <!-- Stats Cards -->
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon-wrapper bg-blue">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="stat-content">
-          <p class="stat-label">Total Sales Today</p>
-          <h3 class="stat-value">$1,245.00</h3>
-          <p class="stat-trend positive">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="trend-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
-            12% from yesterday
-          </p>
-        </div>
-      </div>
+      <UiStatCard 
+        label="Total Sales Today" 
+        value="$1,245.00" 
+        color="blue" 
+        trendText="12% from yesterday" 
+        trendType="positive"
+      >
+        <template #icon>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </template>
+        <template #trend-icon>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="trend-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+        </template>
+      </UiStatCard>
 
-      <div class="stat-card">
-        <div class="stat-icon-wrapper bg-green">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-          </svg>
-        </div>
-        <div class="stat-content">
-          <p class="stat-label">Orders</p>
-          <h3 class="stat-value">64</h3>
-          <p class="stat-trend positive">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="trend-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
-            5% from yesterday
-          </p>
-        </div>
-      </div>
+      <UiStatCard 
+        label="Orders" 
+        value="64" 
+        color="green" 
+        trendText="5% from yesterday" 
+        trendType="positive"
+      >
+        <template #icon>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" /></svg>
+        </template>
+        <template #trend-icon>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="trend-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+        </template>
+      </UiStatCard>
 
-      <div class="stat-card">
-        <div class="stat-icon-wrapper bg-orange">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-          </svg>
-        </div>
-        <div class="stat-content">
-          <p class="stat-label">Prescriptions Filled</p>
-          <h3 class="stat-value">28</h3>
-          <p class="stat-trend negative">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="trend-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 4.5l-15 15m0 0h11.25m-11.25 0V8.25" /></svg>
-            2% from yesterday
-          </p>
-        </div>
-      </div>
+      <UiStatCard 
+        label="Prescriptions Filled" 
+        value="28" 
+        color="orange" 
+        trendText="2% from yesterday" 
+        trendType="negative"
+      >
+        <template #icon>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+        </template>
+        <template #trend-icon>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="trend-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 4.5l-15 15m0 0h11.25m-11.25 0V8.25" /></svg>
+        </template>
+      </UiStatCard>
 
-      <div class="stat-card">
-        <div class="stat-icon-wrapper bg-red">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-        </div>
-        <div class="stat-content">
-          <p class="stat-label">Low Stock Items</p>
-          <h3 class="stat-value">12</h3>
-          <p class="stat-trend neutral">Requires attention</p>
-        </div>
-      </div>
+      <UiStatCard 
+        label="Low Stock Items" 
+        value="12" 
+        color="red" 
+        trendText="Requires attention" 
+        trendType="neutral"
+      >
+        <template #icon>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        </template>
+      </UiStatCard>
     </div>
 
-    <!-- Recent Activity Placeholder -->
+    <!-- Dashboard Grid -->
     <div class="dashboard-grid">
-      <div class="card recent-orders">
-        <div class="card-header">
-          <h3 class="card-title">Recent Transactions</h3>
-          <button class="btn-text">View All</button>
-        </div>
+      <UiAppCard title="Recent Transactions" noPadding>
+        <template #header>
+          <UiAppButton variant="text" size="sm">View All</UiAppButton>
+        </template>
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -96,43 +93,19 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="font-medium">INV-2048</td>
-                <td class="text-muted">10:42 AM</td>
+              <tr v-for="i in 4" :key="i">
+                <td class="font-medium">INV-204{{9-i}}</td>
+                <td class="text-muted">10:{{42 - (i*5)}} AM</td>
                 <td>Walk-in Customer</td>
-                <td class="font-medium">$42.50</td>
-                <td><span class="badge bg-success-light text-success">Completed</span></td>
-              </tr>
-              <tr>
-                <td class="font-medium">INV-2047</td>
-                <td class="text-muted">10:15 AM</td>
-                <td>Sarah Johnson</td>
-                <td class="font-medium">$128.00</td>
-                <td><span class="badge bg-success-light text-success">Completed</span></td>
-              </tr>
-              <tr>
-                <td class="font-medium">INV-2046</td>
-                <td class="text-muted">09:30 AM</td>
-                <td>Michael Chen</td>
-                <td class="font-medium">$15.75</td>
-                <td><span class="badge bg-success-light text-success">Completed</span></td>
-              </tr>
-              <tr>
-                <td class="font-medium">INV-2045</td>
-                <td class="text-muted">09:05 AM</td>
-                <td>Walk-in Customer</td>
-                <td class="font-medium">$8.99</td>
-                <td><span class="badge bg-success-light text-success">Completed</span></td>
+                <td class="font-medium">${{40 + (i*5)}}.00</td>
+                <td><UiAppBadge color="success">Completed</UiAppBadge></td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div>
+      </UiAppCard>
 
-      <div class="card alerts">
-        <div class="card-header">
-          <h3 class="card-title">Alerts & Notifications</h3>
-        </div>
+      <UiAppCard title="Alerts & Notifications">
         <div class="alert-list">
           <div class="alert-item">
             <div class="alert-icon bg-red-light text-red">
@@ -162,7 +135,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </UiAppCard>
     </div>
   </div>
 </template>
@@ -189,48 +162,6 @@
   font-size: 0.95rem;
 }
 
-.btn-primary {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.625rem 1.25rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3);
-}
-
-.btn-icon {
-  width: 18px;
-  height: 18px;
-}
-
-.btn-text {
-  background: transparent;
-  border: none;
-  color: var(--primary);
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 0.875rem;
-}
-
-.btn-text:hover {
-  color: var(--primary-hover);
-  text-decoration: underline;
-}
-
-/* Stats Cards */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -238,104 +169,12 @@
   margin-bottom: 2rem;
 }
 
-.stat-card {
-  background-color: var(--bg-card);
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.stat-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.bg-blue { background-color: rgba(14, 165, 233, 0.1); color: var(--primary); }
-.bg-green { background-color: rgba(16, 185, 129, 0.1); color: var(--success); }
-.bg-orange { background-color: rgba(245, 158, 11, 0.1); color: var(--warning); }
-.bg-red { background-color: rgba(239, 68, 68, 0.1); color: var(--danger); }
-
-.stat-content {
-  flex: 1;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin: 0 0 0.25rem 0;
-  font-weight: 500;
-}
-
-.stat-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 0.25rem 0;
-  color: var(--text-main);
-  letter-spacing: -0.025em;
-}
-
-.stat-trend {
-  font-size: 0.75rem;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-weight: 500;
-}
-
-.trend-icon {
-  width: 14px;
-  height: 14px;
-}
-
-.positive { color: var(--success); }
-.negative { color: var(--danger); }
-.neutral { color: var(--text-muted); }
-
-/* Dashboard Grid Layout */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1.5rem;
 }
 
-.card {
-  background-color: var(--bg-card);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  overflow: hidden;
-}
-
-.card-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin: 0;
-  color: var(--text-main);
-}
-
-/* Table Styles */
 .table-container {
   overflow-x: auto;
 }
@@ -353,7 +192,7 @@
 }
 
 .data-table th {
-  background-color: #f8fafc;
+  background-color: var(--bg-app);
   font-weight: 600;
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -370,28 +209,16 @@
 }
 
 .data-table tbody tr:hover {
-  background-color: #f8fafc;
+  background-color: var(--bg-app);
 }
 
 .font-medium { font-weight: 500; }
 .text-muted { color: var(--text-muted); }
 
-/* Badge Styles */
-.badge {
-  display: inline-block;
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.bg-success-light { background-color: rgba(16, 185, 129, 0.1); }
-.text-success { color: var(--success); }
-
-/* Alerts List */
 .alert-list {
   display: flex;
   flex-direction: column;
+  margin: -1.5rem; /* to offset card padding */
 }
 
 .alert-item {
@@ -443,5 +270,25 @@
   font-size: 0.75rem;
   color: var(--text-muted);
   margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
 }
 </style>
