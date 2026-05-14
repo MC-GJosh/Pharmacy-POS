@@ -1,5 +1,5 @@
 <template>
-  <button :class="['btn', variantClass, sizeClass]" @click="$emit('click')">
+  <button :class="['btn', variantClass, sizeClass]">
     <slot name="prefix"></slot>
     <slot></slot>
     <slot name="suffix"></slot>
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['click'])
+
 
 const variantClass = computed(() => `btn-${props.variant}`)
 const sizeClass = computed(() => `btn-${props.size}`)

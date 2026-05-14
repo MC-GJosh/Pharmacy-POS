@@ -7,14 +7,8 @@
 <script setup>
 import { onMounted } from 'vue'
 
-onMounted(() => {
-  const theme = localStorage.getItem('theme')
-  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
-})
+const { init } = useTheme()
+onMounted(init)
 </script>
 
 <style>
@@ -80,5 +74,10 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* ─── Icon size utilities ──────────────────────────────────── */
+.icon-sm { width: 18px; height: 18px; }
+.icon-md { width: 20px; height: 20px; }
+.icon-lg { width: 24px; height: 24px; }
 </style>
 

@@ -19,6 +19,8 @@ interface _GlobalComponents {
   UiAppBadge: typeof import("../../components/ui/AppBadge.vue")['default']
   UiAppButton: typeof import("../../components/ui/AppButton.vue")['default']
   UiAppCard: typeof import("../../components/ui/AppCard.vue")['default']
+  UiPageHeader: typeof import("../../components/ui/PageHeader.vue")['default']
+  UiSalesTrendChart: typeof import("../../components/ui/SalesTrendChart.vue")['default']
   UiStatCard: typeof import("../../components/ui/StatCard.vue")['default']
   NuxtWelcome: typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
   NuxtLayout: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
@@ -48,6 +50,8 @@ interface _GlobalComponents {
   LazyUiAppBadge: LazyComponent<typeof import("../../components/ui/AppBadge.vue")['default']>
   LazyUiAppButton: LazyComponent<typeof import("../../components/ui/AppButton.vue")['default']>
   LazyUiAppCard: LazyComponent<typeof import("../../components/ui/AppCard.vue")['default']>
+  LazyUiPageHeader: LazyComponent<typeof import("../../components/ui/PageHeader.vue")['default']>
+  LazyUiSalesTrendChart: LazyComponent<typeof import("../../components/ui/SalesTrendChart.vue")['default']>
   LazyUiStatCard: LazyComponent<typeof import("../../components/ui/StatCard.vue")['default']>
   LazyNuxtWelcome: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
   LazyNuxtLayout: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>

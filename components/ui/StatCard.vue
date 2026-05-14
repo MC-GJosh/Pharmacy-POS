@@ -16,17 +16,28 @@
 
 <script setup>
 defineProps({
-  label: String,
-  value: [String, Number],
+  label: {
+    type: String,
+    required: true,
+  },
+  value: {
+    type: [String, Number],
+    required: true,
+  },
   color: {
     type: String,
-    default: 'blue' 
+    default: 'blue',
+    validator: (val) => ['blue', 'green', 'orange', 'red'].includes(val),
   },
-  trendText: String,
+  trendText: {
+    type: String,
+    default: '',
+  },
   trendType: {
     type: String,
-    default: 'neutral' 
-  }
+    default: 'neutral',
+    validator: (val) => ['positive', 'negative', 'neutral'].includes(val),
+  },
 })
 </script>
 

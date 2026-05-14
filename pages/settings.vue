@@ -1,12 +1,10 @@
 <template>
   <div>
-    <div class="page-header">
-      <div>
-        <h1 class="page-title">Settings</h1>
-        <p class="page-subtitle">Configure system preferences and user access</p>
-      </div>
-      <UiAppButton variant="primary">Save Changes</UiAppButton>
-    </div>
+    <UiPageHeader title="Settings" subtitle="Configure system preferences and user access">
+      <template #actions>
+        <UiAppButton variant="primary">Save Changes</UiAppButton>
+      </template>
+    </UiPageHeader>
     
     <UiAppCard>
       <div class="empty-state">
@@ -22,27 +20,6 @@
 </template>
 
 <style scoped>
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 2rem;
-}
-
-.page-title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  margin: 0 0 0.25rem 0;
-  color: var(--text-main);
-  letter-spacing: -0.025em;
-}
-
-.page-subtitle {
-  color: var(--text-muted);
-  margin: 0;
-  font-size: 0.95rem;
-}
-
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -61,13 +38,5 @@
   color: var(--text-main);
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
-}
-
-@media (max-width: 640px) {
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
 }
 </style>

@@ -1,19 +1,17 @@
 <template>
   <div>
-    <div class="page-header">
-      <div>
-        <h1 class="page-title">Reports</h1>
-        <p class="page-subtitle">View financial and operational analytics</p>
-      </div>
-      <UiAppButton variant="secondary">
-        <template #prefix>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-          </svg>
-        </template>
-        Export PDF
-      </UiAppButton>
-    </div>
+    <UiPageHeader title="Reports" subtitle="View financial and operational analytics">
+      <template #actions>
+        <UiAppButton variant="secondary">
+          <template #prefix>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-sm">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+          </template>
+          Export PDF
+        </UiAppButton>
+      </template>
+    </UiPageHeader>
     
     <UiAppCard>
       <div class="empty-state">
@@ -28,27 +26,6 @@
 </template>
 
 <style scoped>
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 2rem;
-}
-
-.page-title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  margin: 0 0 0.25rem 0;
-  color: var(--text-main);
-  letter-spacing: -0.025em;
-}
-
-.page-subtitle {
-  color: var(--text-muted);
-  margin: 0;
-  font-size: 0.95rem;
-}
-
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -67,13 +44,5 @@
   color: var(--text-main);
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
-}
-
-@media (max-width: 640px) {
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
 }
 </style>

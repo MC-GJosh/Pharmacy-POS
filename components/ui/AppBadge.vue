@@ -9,7 +9,8 @@ defineProps({
   color: {
     type: String,
     default: 'primary',
-  }
+    validator: (val) => ['primary', 'success', 'warning', 'danger'].includes(val),
+  },
 })
 </script>
 
