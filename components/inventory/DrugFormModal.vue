@@ -48,7 +48,14 @@
               <input v-model="form.strength" required placeholder="e.g. 500 mg" />
             </div>
             <div class="field">
-              <label>Manufacturer / Brand <span class="req">*</span></label>
+              <label>Unit of Measure</label>
+              <select v-model="form.unitOfMeasure">
+                <option value="">Select unit</option>
+                <option v-for="u in UNITS_OF_MEASURE" :key="u" :value="u">{{ u }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Manufacturer <span class="req">*</span></label>
               <select v-model="form.manufacturer" required>
                 <option value="" disabled>Select manufacturer</option>
                 <option v-for="m in MANUFACTURERS" :key="m" :value="m">{{ m }}</option>
@@ -85,18 +92,62 @@
             </label>
           </div>
 
-          <!-- Section: Stock & Pricing -->
-          <p class="section-label">Stock & Pricing</p>
+          <!-- Section: Stock Levels -->
+          <p class="section-label">Stock Levels</p>
           <div class="field-row three-col">
             <div class="field">
-              <label>Current Stock (pieces)</label>
+              <label>Quantity in Stock</label>
               <input v-model.number="form.stock" type="number" min="0" placeholder="0" />
             </div>
             <div class="field">
-              <label>Reorder Level (pieces)</label>
-              <input v-model.number="form.reorderLevel" type="number" min="0" placeholder="50" />
+              <label>Min / Reorder Level <span class="req">*</span></label>
+              <input v-model.number="form.reorderLevel" type="number" min="0" placeholder="50" required />
+              <span class="field-hint">⚠️ Alert when stock falls below this</span>
             </div>
             <div class="field">
+              <label>Maximum Stock</label>
+              <input v-model.number="form.maxStock" type="number" min="0" placeholder="500" />
+            </div>
+          </div>
+
+          <!-- Section: Batch & Expiry -->
+          <p class="section-label">Batch & Expiry</p>
+          <div class="field-row">
+            <div class="field">
+              <label>Lot / Batch Number</label>
+              <input v-model="form.batchNumber" placeholder="e.g. BG-2024-001" />
+            </div>
+            <div class="field">
+              <label>Expiry Date</label>
+              <input v-model="form.expiryDate" type="date" />
+              <span v-if="expiryWarning" :class="['field-hint', expiryHintClass]">{{ expiryWarning }}</span>
+            </div>
+            <div class="field">
+              <label>Date Received</label>
+              <input v-model="form.dateReceived" type="date" />
+            </div>
+          </div>
+
+          <!-- Section: Storage -->
+          <p class="section-label">Storage</p>
+          <div class="field-row">
+            <div class="field">
+              <label>Storage Location / Shelf / Bin</label>
+              <input v-model="form.storageLocation" placeholder="e.g. Shelf A-1" />
+            </div>
+            <div class="field">
+              <label>Storage Requirement</label>
+              <select v-model="form.storageRequirement">
+                <option value="">Select requirement</option>
+                <option v-for="s in STORAGE_REQUIREMENTS" :key="s" :value="s">{{ s }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Section: Pricing -->
+          <p class="section-label">Pricing</p>
+          <div class="field-row">
+            <div class="field" style="max-width: 200px">
               <label>Price per piece (₱)</label>
               <input v-model.number="form.price" type="number" min="0" step="0.01" placeholder="0.00" />
             </div>
@@ -121,6 +172,8 @@ const props = defineProps({
   DRUG_CATEGORIES: { type: Array, required: true },
   DOSAGE_FORMS: { type: Array, required: true },
   MANUFACTURERS: { type: Array, required: true },
+  UNITS_OF_MEASURE: { type: Array, default: () => [] },
+  STORAGE_REQUIREMENTS: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['update:modelValue', 'submit'])
 
@@ -129,8 +182,11 @@ const isEdit = computed(() => !!props.drug)
 const blank = () => ({
   genericName: '', brandName: '', category: '', dosageForm: '',
   strength: '', manufacturer: '', description: '',
-  piecesPerStrip: 10, stripsPerBox: 10, sellByUnit: true,
-  stock: 0, reorderLevel: 50, price: 0,
+  unitOfMeasure: '', piecesPerStrip: 10, stripsPerBox: 10, sellByUnit: true,
+  stock: 0, reorderLevel: 50, maxStock: 500,
+  batchNumber: '', expiryDate: '', dateReceived: new Date().toISOString().slice(0, 10),
+  storageLocation: '', storageRequirement: '',
+  price: 0,
 })
 
 const form = ref(blank())
@@ -142,6 +198,21 @@ watch(() => props.modelValue, (open) => {
 const piecesPerBoxCalc = computed(() =>
   (form.value.piecesPerStrip || 0) * (form.value.stripsPerBox || 0)
 )
+
+const expiryWarning = computed(() => {
+  if (!form.value.expiryDate) return ''
+  const diff = Math.ceil((new Date(form.value.expiryDate) - new Date()) / (1000 * 60 * 60 * 24))
+  if (diff <= 0) return '🔴 This item is already expired!'
+  if (diff <= 30) return `🔴 Expires in ${diff} day(s) — critical!`
+  if (diff <= 90) return `🟡 Expires in ${diff} day(s) — near expiry`
+  return ''
+})
+
+const expiryHintClass = computed(() => {
+  if (!form.value.expiryDate) return ''
+  const diff = Math.ceil((new Date(form.value.expiryDate) - new Date()) / (1000 * 60 * 60 * 24))
+  return diff <= 30 ? 'hint-danger' : 'hint-warning'
+})
 
 const handleSubmit = () => {
   emit('submit', { ...form.value })
@@ -166,7 +237,7 @@ const handleSubmit = () => {
   background: var(--bg-card);
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  width: 100%; max-width: 680px;
+  width: 100%; max-width: 740px;
   max-height: 90vh;
   display: flex; flex-direction: column;
   box-shadow: 0 25px 50px rgba(0,0,0,0.25);
@@ -223,6 +294,10 @@ const handleSubmit = () => {
   box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
 }
 .field textarea { resize: vertical; }
+
+.field-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.125rem; }
+.hint-danger { color: var(--danger) !important; font-weight: 600; }
+.hint-warning { color: var(--warning) !important; font-weight: 600; }
 
 .field-row { display: flex; gap: 1rem; }
 .field-row.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }

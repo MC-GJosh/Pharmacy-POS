@@ -31,6 +31,11 @@
         <option v-for="f in DOSAGE_FORMS" :key="f" :value="f">{{ f }}</option>
       </select>
 
+      <select v-model="filterStorage" class="filter-select">
+        <option value="">All Storage</option>
+        <option v-for="s in STORAGE_REQUIREMENTS" :key="s" :value="s">{{ s }}</option>
+      </select>
+
       <span class="result-count">{{ filteredDrugs.length }} result{{ filteredDrugs.length !== 1 ? 's' : '' }}</span>
     </div>
 
@@ -46,6 +51,8 @@
               <th>Manufacturer</th>
               <th>Packaging</th>
               <th>Stock</th>
+              <th>Expiry</th>
+              <th>Storage</th>
               <th>Price</th>
               <th>Flags</th>
               <th></th>
@@ -53,7 +60,7 @@
           </thead>
           <tbody>
             <tr v-if="filteredDrugs.length === 0">
-              <td colspan="9" class="empty-row">
+              <td colspan="11" class="empty-row">
                 <div class="empty-state">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="empty-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
                   <p>No drugs found matching your filters.</p>
@@ -84,8 +91,23 @@
               <td>
                 <div class="stock-cell">
                   <UiAppBadge :color="stockStatus(drug) === 'ok' ? 'success' : stockStatus(drug) === 'low' ? 'warning' : 'danger'">
-                    {{ drug.stock === 0 ? 'Out' : drug.stock + ' pcs' }}
+                    {{ drug.stock === 0 ? 'Out' : drug.stock + ' ' + (drug.unitOfMeasure || 'pcs') }}
                   </UiAppBadge>
+                </div>
+              </td>
+              <td>
+                <div v-if="drug.expiryDate" class="expiry-cell">
+                  <UiAppBadge :color="expiryStatus(drug) === 'expired' || expiryStatus(drug) === 'critical' ? 'danger' : expiryStatus(drug) === 'warning' ? 'warning' : 'success'">
+                    {{ formatDate(drug.expiryDate) }}
+                  </UiAppBadge>
+                  <span v-if="expiryDaysLeft(drug) !== null" class="expiry-sub">{{ expiryDaysLeft(drug) > 0 ? expiryDaysLeft(drug) + ' days left' : 'Expired' }}</span>
+                </div>
+                <span v-else class="muted-text">-</span>
+              </td>
+              <td>
+                <div class="storage-cell">
+                  <span class="storage-main">{{ drug.storageLocation || '-' }}</span>
+                  <span v-if="drug.storageRequirement" class="storage-sub">{{ drug.storageRequirement }}</span>
                 </div>
               </td>
               <td class="price-text">₱{{ drug.price.toFixed(2) }}</td>
@@ -97,6 +119,9 @@
               </td>
               <td @click.stop>
                 <div class="row-actions">
+                  <button class="action-btn" title="Adjust Stock" @click.stop="openAdjust(drug)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  </button>
                   <button class="action-btn" title="View details" @click="viewDrug(drug)">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.641 0-8.58-3.008-9.964-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                   </button>
@@ -127,7 +152,16 @@
       :DRUG_CATEGORIES="DRUG_CATEGORIES"
       :DOSAGE_FORMS="DOSAGE_FORMS"
       :MANUFACTURERS="MANUFACTURERS"
+      :UNITS_OF_MEASURE="UNITS_OF_MEASURE"
+      :STORAGE_REQUIREMENTS="STORAGE_REQUIREMENTS"
       @submit="handleFormSubmit"
+    />
+
+    <InventoryStockAdjustmentModal
+      v-model="showAdjust"
+      :drug="adjustingDrug"
+      :ADJUSTMENT_REASONS="ADJUSTMENT_REASONS"
+      @submit="handleAdjustSubmit"
     />
 
     <InventoryDrugDetailDrawer
@@ -144,11 +178,17 @@
 import { ref, computed } from 'vue'
 
 const {
-  filteredDrugs, searchQuery, filterCategory, filterForm,
-  DRUG_CATEGORIES, DOSAGE_FORMS, MANUFACTURERS,
-  piecesPerBox, stockStatus, hasSubstitute, getSubstituteDetails,
-  addDrug, updateDrug, deleteDrug,
+  filteredDrugs, searchQuery, filterCategory, filterForm, filterStorage,
+  DRUG_CATEGORIES, DOSAGE_FORMS, MANUFACTURERS, UNITS_OF_MEASURE, STORAGE_REQUIREMENTS, ADJUSTMENT_REASONS,
+  piecesPerBox, stockStatus, expiryStatus, expiryDaysLeft, hasSubstitute, getSubstituteDetails,
+  addDrug, updateDrug, deleteDrug, adjustStock
 } = useInventory()
+
+const formatDate = (iso) => {
+  if (!iso) return ''
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })
+}
 
 // ── Form modal ──────────────────────────────────────────────────────────────
 const showForm = ref(false)
@@ -160,6 +200,17 @@ const openEdit = (drug) => { editingDrug.value = drug; showForm.value = true; sh
 const handleFormSubmit = (data) => {
   if (editingDrug.value) updateDrug(editingDrug.value.id, data)
   else addDrug(data)
+}
+
+// ── Adjust modal ────────────────────────────────────────────────────────────
+const showAdjust = ref(false)
+const adjustingDrug = ref(null)
+
+const openAdjust = (drug) => { adjustingDrug.value = drug; showAdjust.value = true }
+const handleAdjustSubmit = (data) => {
+  if (adjustingDrug.value) {
+    adjustStock(adjustingDrug.value.id, data)
+  }
 }
 
 // ── Detail drawer ───────────────────────────────────────────────────────────
@@ -264,6 +315,10 @@ const viewDrug = (drug) => {
 .packaging-cell { display: flex; flex-direction: column; gap: 0.125rem; }
 .pkg-main { font-weight: 600; color: var(--text-main); }
 .pkg-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+.expiry-cell, .storage-cell { display: flex; flex-direction: column; gap: 0.125rem; }
+.expiry-sub, .storage-sub { font-size: 0.72rem; color: var(--text-muted); }
+.storage-main { font-weight: 500; color: var(--text-main); font-size: 0.85rem; }
 
 .price-text { font-weight: 700; color: var(--primary); }
 

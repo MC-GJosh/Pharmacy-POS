@@ -18,6 +18,7 @@ interface _GlobalComponents {
   TopHeader: typeof import("../../components/TopHeader.vue")['default']
   InventoryDrugDetailDrawer: typeof import("../../components/inventory/DrugDetailDrawer.vue")['default']
   InventoryDrugFormModal: typeof import("../../components/inventory/DrugFormModal.vue")['default']
+  InventoryStockAdjustmentModal: typeof import("../../components/inventory/StockAdjustmentModal.vue")['default']
   UiAppBadge: typeof import("../../components/ui/AppBadge.vue")['default']
   UiAppButton: typeof import("../../components/ui/AppButton.vue")['default']
   UiAppCard: typeof import("../../components/ui/AppCard.vue")['default']
@@ -51,6 +52,7 @@ interface _GlobalComponents {
   LazyTopHeader: LazyComponent<typeof import("../../components/TopHeader.vue")['default']>
   LazyInventoryDrugDetailDrawer: LazyComponent<typeof import("../../components/inventory/DrugDetailDrawer.vue")['default']>
   LazyInventoryDrugFormModal: LazyComponent<typeof import("../../components/inventory/DrugFormModal.vue")['default']>
+  LazyInventoryStockAdjustmentModal: LazyComponent<typeof import("../../components/inventory/StockAdjustmentModal.vue")['default']>
   LazyUiAppBadge: LazyComponent<typeof import("../../components/ui/AppBadge.vue")['default']>
   LazyUiAppButton: LazyComponent<typeof import("../../components/ui/AppButton.vue")['default']>
   LazyUiAppCard: LazyComponent<typeof import("../../components/ui/AppCard.vue")['default']>
