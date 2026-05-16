@@ -53,7 +53,7 @@
               <th>Stock</th>
               <th>Expiry</th>
               <th>Storage</th>
-              <th>Price</th>
+              <th>Pricing</th>
               <th>Flags</th>
               <th></th>
             </tr>
@@ -110,7 +110,12 @@
                   <span v-if="drug.storageRequirement" class="storage-sub">{{ drug.storageRequirement }}</span>
                 </div>
               </td>
-              <td class="price-text">₱{{ drug.price.toFixed(2) }}</td>
+              <td>
+                <div class="pricing-cell">
+                  <span class="price-main" title="Selling Price / Retail">₱{{ drug.sellingPrice.toFixed(2) }}</span>
+                  <span class="price-sub" title="Cost Price / Wholesale">C: ₱{{ drug.costPrice.toFixed(2) }} | W: ₱{{ drug.wholesalePrice.toFixed(2) }}</span>
+                </div>
+              </td>
               <td>
                 <div class="flags-cell">
                   <span v-if="drug.sellByUnit" class="flag-dot flag-blue" title="Sell by piece"></span>
@@ -320,7 +325,9 @@ const viewDrug = (drug) => {
 .expiry-sub, .storage-sub { font-size: 0.72rem; color: var(--text-muted); }
 .storage-main { font-weight: 500; color: var(--text-main); font-size: 0.85rem; }
 
-.price-text { font-weight: 700; color: var(--primary); }
+.pricing-cell { display: flex; flex-direction: column; gap: 0.125rem; }
+.price-main { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+.price-sub { font-size: 0.72rem; color: var(--text-muted); }
 
 .flags-cell { display: flex; gap: 0.375rem; align-items: center; }
 .flag-dot {

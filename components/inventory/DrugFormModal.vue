@@ -146,10 +146,18 @@
 
           <!-- Section: Pricing -->
           <p class="section-label">Pricing</p>
-          <div class="field-row">
-            <div class="field" style="max-width: 200px">
-              <label>Price per piece (₱)</label>
-              <input v-model.number="form.price" type="number" min="0" step="0.01" placeholder="0.00" />
+          <div class="field-row three-col">
+            <div class="field">
+              <label>Cost Price (₱)</label>
+              <input v-model.number="form.costPrice" type="number" min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="field">
+              <label>Wholesale Price (₱)</label>
+              <input v-model.number="form.wholesalePrice" type="number" min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="field">
+              <label>Selling Price (₱)</label>
+              <input v-model.number="form.sellingPrice" type="number" min="0" step="0.01" placeholder="0.00" />
             </div>
           </div>
 
@@ -186,7 +194,7 @@ const blank = () => ({
   stock: 0, reorderLevel: 50, maxStock: 500,
   batchNumber: '', expiryDate: '', dateReceived: new Date().toISOString().slice(0, 10),
   storageLocation: '', storageRequirement: '',
-  price: 0,
+  costPrice: 0, wholesalePrice: 0, sellingPrice: 0,
 })
 
 const form = ref(blank())

@@ -30,16 +30,24 @@
               <span class="info-value strong">{{ drug.strength }}</span>
             </div>
             <div class="info-item">
+              <span class="info-label">Cost Price</span>
+              <span class="info-value">₱{{ drug.costPrice.toFixed(2) }}</span>
+            </div>
+            <div class="info-item">
               <span class="info-label">Manufacturer</span>
               <span class="info-value">{{ drug.manufacturer }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Wholesale Price</span>
+              <span class="info-value">₱{{ drug.wholesalePrice.toFixed(2) }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Dosage Form</span>
               <span class="info-value">{{ drug.dosageForm }}</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Price / Piece</span>
-              <span class="info-value strong">₱{{ drug.price.toFixed(2) }}</span>
+              <span class="info-label">Selling / Retail Price</span>
+              <span class="info-value strong">₱{{ drug.sellingPrice.toFixed(2) }}</span>
             </div>
           </div>
 
@@ -93,7 +101,7 @@
                   <p class="sub-meta">{{ sub.genericName }} · {{ sub.strength }}</p>
                 </div>
                 <div class="sub-right">
-                  <span class="sub-price">₱{{ sub.price.toFixed(2) }}</span>
+                  <span class="sub-price">₱{{ sub.sellingPrice.toFixed(2) }}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                 </div>
               </div>

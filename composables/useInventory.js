@@ -55,7 +55,7 @@ const SEED_DRUGS = [
       { id: 2, brandName: 'Tempra', strength: '500 mg' },
       { id: 3, brandName: 'Panadol', strength: '500 mg' },
     ],
-    price: 2.50,
+    costPrice: 1.50, wholesalePrice: 2.00, sellingPrice: 2.50,
     adjustmentLog: [],
   },
   {
@@ -73,7 +73,7 @@ const SEED_DRUGS = [
       { id: 1, brandName: 'Biogesic', strength: '500 mg' },
       { id: 3, brandName: 'Panadol', strength: '500 mg' },
     ],
-    price: 2.75,
+    costPrice: 1.75, wholesalePrice: 2.25, sellingPrice: 2.75,
     adjustmentLog: [],
   },
   {
@@ -91,7 +91,7 @@ const SEED_DRUGS = [
       { id: 1, brandName: 'Biogesic', strength: '500 mg' },
       { id: 2, brandName: 'Tempra', strength: '500 mg' },
     ],
-    price: 3.00,
+    costPrice: 2.00, wholesalePrice: 2.50, sellingPrice: 3.00,
     adjustmentLog: [],
   },
   {
@@ -106,7 +106,7 @@ const SEED_DRUGS = [
     batchNumber: 'AX-2024-033', expiryDate: daysFromNow(90), dateReceived: daysAgo(10),
     storageLocation: 'Shelf B-1', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 5, brandName: 'Amoxicot', strength: '500 mg' }],
-    price: 12.00,
+    costPrice: 8.00, wholesalePrice: 10.00, sellingPrice: 12.00,
     adjustmentLog: [],
   },
   {
@@ -121,7 +121,7 @@ const SEED_DRUGS = [
     batchNumber: 'AC-2024-011', expiryDate: daysFromNow(200), dateReceived: daysAgo(5),
     storageLocation: 'Shelf B-2', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 4, brandName: 'Amoxil', strength: '500 mg' }],
-    price: 8.50,
+    costPrice: 5.00, wholesalePrice: 6.50, sellingPrice: 8.50,
     adjustmentLog: [],
   },
   {
@@ -136,7 +136,7 @@ const SEED_DRUGS = [
     batchNumber: 'OZ-2024-005', expiryDate: daysFromNow(-5), dateReceived: daysAgo(120),
     storageLocation: 'Shelf C-1', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 7, brandName: 'Prilosec', strength: '20 mg' }],
-    price: 18.00,
+    costPrice: 12.00, wholesalePrice: 15.00, sellingPrice: 18.00,
     adjustmentLog: [],
   },
   {
@@ -151,7 +151,7 @@ const SEED_DRUGS = [
     batchNumber: 'PL-2024-009', expiryDate: daysFromNow(60), dateReceived: daysAgo(20),
     storageLocation: 'Shelf C-2', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 6, brandName: 'Omez', strength: '20 mg' }],
-    price: 22.00,
+    costPrice: 15.00, wholesalePrice: 18.00, sellingPrice: 22.00,
     adjustmentLog: [],
   },
   {
@@ -166,7 +166,7 @@ const SEED_DRUGS = [
     batchNumber: 'ZT-2024-021', expiryDate: daysFromNow(300), dateReceived: daysAgo(8),
     storageLocation: 'Shelf D-1', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 9, brandName: 'Allerta', strength: '10 mg' }],
-    price: 28.00,
+    costPrice: 18.00, wholesalePrice: 22.00, sellingPrice: 28.00,
     adjustmentLog: [],
   },
   {
@@ -181,7 +181,7 @@ const SEED_DRUGS = [
     batchNumber: 'AL-2024-018', expiryDate: daysFromNow(400), dateReceived: daysAgo(3),
     storageLocation: 'Shelf D-2', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 8, brandName: 'Zyrtec', strength: '10 mg' }],
-    price: 15.00,
+    costPrice: 10.00, wholesalePrice: 12.00, sellingPrice: 15.00,
     adjustmentLog: [],
   },
   {
@@ -196,7 +196,7 @@ const SEED_DRUGS = [
     batchNumber: 'NV-2024-044', expiryDate: daysFromNow(150), dateReceived: daysAgo(45),
     storageLocation: 'Shelf E-1', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 11, brandName: 'Ambesyl', strength: '5 mg' }],
-    price: 35.00,
+    costPrice: 25.00, wholesalePrice: 30.00, sellingPrice: 35.00,
     adjustmentLog: [],
   },
   {
@@ -211,7 +211,7 @@ const SEED_DRUGS = [
     batchNumber: 'AB-2024-003', expiryDate: daysFromNow(500), dateReceived: daysAgo(90),
     storageLocation: 'Shelf E-2', storageRequirement: 'Room Temperature',
     genericSubstitutes: [{ id: 10, brandName: 'Norvasc', strength: '5 mg' }],
-    price: 22.00,
+    costPrice: 15.00, wholesalePrice: 18.00, sellingPrice: 22.00,
     adjustmentLog: [],
   },
   {
@@ -226,7 +226,7 @@ const SEED_DRUGS = [
     batchNumber: 'LT-2024-088', expiryDate: daysFromNow(45), dateReceived: daysAgo(7),
     storageLocation: 'Refrigerator R-1', storageRequirement: 'Refrigerated',
     genericSubstitutes: [],
-    price: 850.00,
+    costPrice: 650.00, wholesalePrice: 750.00, sellingPrice: 850.00,
     adjustmentLog: [],
   },
   {
@@ -241,7 +241,7 @@ const SEED_DRUGS = [
     batchNumber: 'CC-2024-056', expiryDate: daysFromNow(730), dateReceived: daysAgo(1),
     storageLocation: 'Shelf F-1', storageRequirement: 'Room Temperature',
     genericSubstitutes: [],
-    price: 3.50,
+    costPrice: 2.00, wholesalePrice: 2.75, sellingPrice: 3.50,
     adjustmentLog: [],
   },
 ]
