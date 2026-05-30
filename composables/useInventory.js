@@ -1,4 +1,5 @@
 // ─── useInventory.js ───────────────────────────────────────────────────────
+import * as XLSX from 'xlsx'
 // Central data composable for the Inventory module.
 
 const DRUG_CATEGORIES = [
@@ -351,11 +352,264 @@ export function useInventory() {
     drugs.value = drugs.value.filter(d => d.id !== id)
   }
 
+  // ── Excel: Export inventory ────────────────────────────────────────────────
+  const exportInventoryToExcel = () => {
+    const rows = drugs.value.map(d => ({
+      'Generic Name':        d.genericName,
+      'Brand Name':          d.brandName,
+      'Category':            d.category,
+      'Dosage Form':         d.dosageForm,
+      'Strength':            d.strength,
+      'Manufacturer':        d.manufacturer,
+      'Unit of Measure':     d.unitOfMeasure,
+      'Pieces/Strip':        d.piecesPerStrip,
+      'Strips/Box':          d.stripsPerBox,
+      'Sell by Unit':        d.sellByUnit ? 'Yes' : 'No',
+      'Stock':               d.stock,
+      'Reorder Level':       d.reorderLevel,
+      'Max Stock':           d.maxStock,
+      'Batch Number':        d.batchNumber || '',
+      'Expiry Date':         d.expiryDate || '',
+      'Date Received':       d.dateReceived || '',
+      'Storage Location':    d.storageLocation || '',
+      'Storage Requirement': d.storageRequirement || '',
+      'Cost Price':          d.costPrice,
+      'Wholesale Price':     d.wholesalePrice,
+      'Selling Price':       d.sellingPrice,
+      'Description':         d.description || '',
+    }))
+
+    const ws = XLSX.utils.json_to_sheet(rows)
+
+    // Bold header row styling
+    const range = XLSX.utils.decode_range(ws['!ref'])
+    for (let C = range.s.c; C <= range.e.c; C++) {
+      const cellAddr = XLSX.utils.encode_cell({ r: 0, c: C })
+      if (!ws[cellAddr]) continue
+      ws[cellAddr].s = { font: { bold: true }, fill: { fgColor: { rgb: '0E4F7A' } }, alignment: { horizontal: 'center' } }
+    }
+
+    // Column widths
+    ws['!cols'] = [
+      { wch: 20 }, { wch: 18 }, { wch: 22 }, { wch: 14 }, { wch: 12 },
+      { wch: 18 }, { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 12 },
+      { wch: 10 }, { wch: 14 }, { wch: 12 }, { wch: 16 }, { wch: 14 },
+      { wch: 14 }, { wch: 20 }, { wch: 22 }, { wch: 12 }, { wch: 16 },
+      { wch: 14 }, { wch: 36 },
+    ]
+
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Inventory')
+    const now = new Date().toISOString().slice(0, 10)
+    XLSX.writeFile(wb, `pharmacy-inventory-${now}.xlsx`)
+  }
+
+  // ── Excel: Download import template ───────────────────────────────────────
+  const downloadImportTemplate = () => {
+    const headers = [
+      'Generic Name', 'Brand Name', 'Category', 'Dosage Form', 'Strength',
+      'Manufacturer', 'Unit of Measure', 'Pieces/Strip', 'Strips/Box', 'Sell by Unit',
+      'Stock', 'Reorder Level', 'Max Stock', 'Batch Number', 'Expiry Date',
+      'Date Received', 'Storage Location', 'Storage Requirement',
+      'Cost Price', 'Wholesale Price', 'Selling Price', 'Description',
+    ]
+
+    const samples = [
+      [
+        'Paracetamol', 'Biogesic', 'Analgesics & NSAIDs', 'Tablet', '500 mg',
+        'Unilab', 'Tablet', 10, 10, 'Yes',
+        100, 20, 500, 'BG-2024-001', '2025-12-31',
+        '2024-01-15', 'Shelf A-1', 'Room Temperature',
+        1.50, 2.00, 2.50, 'Pain reliever and fever reducer',
+      ],
+      [
+        'Amoxicillin', 'Amoxil', 'Antibiotics', 'Capsule', '500 mg',
+        'GlaxoSmithKline', 'Capsule', 10, 5, 'No',
+        50, 10, 200, 'AX-2024-010', '2025-06-30',
+        '2024-02-01', 'Shelf B-1', 'Room Temperature',
+        8.00, 10.00, 12.00, 'Broad-spectrum antibiotic',
+      ],
+    ]
+
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...samples])
+
+    // Bold + styled header row
+    for (let C = 0; C < headers.length; C++) {
+      const addr = XLSX.utils.encode_cell({ r: 0, c: C })
+      if (!ws[addr]) continue
+      ws[addr].s = { font: { bold: true, color: { rgb: 'FFFFFF' } }, fill: { fgColor: { rgb: '0369A1' } }, alignment: { horizontal: 'center', wrapText: true } }
+    }
+
+    // Column widths
+    ws['!cols'] = headers.map(() => ({ wch: 20 }))
+
+    // Notes on key columns
+    const notesMap = {
+      'Category':            'Allowed: ' + DRUG_CATEGORIES.join(', '),
+      'Dosage Form':         'Allowed: ' + DOSAGE_FORMS.join(', '),
+      'Unit of Measure':     'Allowed: ' + UNITS_OF_MEASURE.join(', '),
+      'Storage Requirement': 'Allowed: ' + STORAGE_REQUIREMENTS.join(', '),
+      'Sell by Unit':        'Use Yes or No',
+      'Expiry Date':         'Format: YYYY-MM-DD',
+      'Date Received':       'Format: YYYY-MM-DD',
+      'Cost Price':          'Number (e.g. 8.50)',
+      'Wholesale Price':     'Number, must be ≥ Cost Price',
+      'Selling Price':       'Number, must be ≥ Cost Price',
+    }
+    headers.forEach((h, C) => {
+      if (!notesMap[h]) return
+      const addr = XLSX.utils.encode_cell({ r: 0, c: C })
+      if (ws[addr]) ws[addr].c = [{ a: 'Template', t: notesMap[h] }]
+    })
+
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Drug Import Template')
+    XLSX.writeFile(wb, 'pharmacy-import-template.xlsx')
+  }
+
+  // ── Excel: Import from XLSX ────────────────────────────────────────────────
+  const importFromExcel = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const wb = XLSX.read(e.target.result, { type: 'binary', cellDates: true })
+        const ws = wb.Sheets[wb.SheetNames[0]]
+        const rawRows = XLSX.utils.sheet_to_json(ws, { defval: '' })
+
+        const imported = []
+        const errors   = []
+
+        rawRows.forEach((row, i) => {
+          const rowNum  = i + 2 // 1-indexed, +1 for header
+          const rowErrors = []
+
+          const get = (key) => (row[key] ?? '').toString().trim()
+          const getNum = (key) => parseFloat(get(key))
+
+          // Required text fields
+          const textFields = ['Generic Name', 'Brand Name', 'Strength', 'Manufacturer']
+          textFields.forEach(f => {
+            if (!get(f)) rowErrors.push({ field: f, msg: `"${f}" is required` })
+          })
+
+          // Enum validations
+          const cat = get('Category')
+          if (!cat) {
+            rowErrors.push({ field: 'Category', msg: '"Category" is required' })
+          } else if (!DRUG_CATEGORIES.includes(cat)) {
+            rowErrors.push({ field: 'Category', msg: `"${cat}" is not a valid category` })
+          }
+
+          const form = get('Dosage Form')
+          if (!form) {
+            rowErrors.push({ field: 'Dosage Form', msg: '"Dosage Form" is required' })
+          } else if (!DOSAGE_FORMS.includes(form)) {
+            rowErrors.push({ field: 'Dosage Form', msg: `"${form}" is not a valid dosage form` })
+          }
+
+          const uom = get('Unit of Measure')
+          if (uom && !UNITS_OF_MEASURE.includes(uom)) {
+            rowErrors.push({ field: 'Unit of Measure', msg: `"${uom}" is not a valid unit` })
+          }
+
+          const stor = get('Storage Requirement')
+          if (stor && !STORAGE_REQUIREMENTS.includes(stor)) {
+            rowErrors.push({ field: 'Storage Requirement', msg: `"${stor}" is not a valid storage requirement` })
+          }
+
+          // Numeric fields
+          const cost  = getNum('Cost Price')
+          const whole = getNum('Wholesale Price')
+          const sell  = getNum('Selling Price')
+          const stock = parseInt(get('Stock'), 10)
+          const reorder = parseInt(get('Reorder Level'), 10)
+
+          if (isNaN(cost) || cost < 0)   rowErrors.push({ field: 'Cost Price',     msg: 'Must be a positive number' })
+          if (isNaN(sell) || sell < 0)   rowErrors.push({ field: 'Selling Price',  msg: 'Must be a positive number' })
+          if (!isNaN(cost) && !isNaN(sell) && sell < cost)
+            rowErrors.push({ field: 'Selling Price', msg: `Selling price (${sell}) must be ≥ cost price (${cost})` })
+          if (isNaN(stock) || stock < 0)  rowErrors.push({ field: 'Stock',         msg: 'Must be an integer ≥ 0' })
+          if (isNaN(reorder) || reorder < 0) rowErrors.push({ field: 'Reorder Level', msg: 'Must be an integer ≥ 0' })
+
+          // Expiry date
+          const expiryRaw = get('Expiry Date')
+          let expiryDate = ''
+          if (!expiryRaw) {
+            rowErrors.push({ field: 'Expiry Date', msg: '"Expiry Date" is required' })
+          } else {
+            // Handle Excel date serial numbers
+            if (typeof row['Expiry Date'] === 'number') {
+              const d = XLSX.SSF.parse_date_code(row['Expiry Date'])
+              expiryDate = `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`
+            } else if (row['Expiry Date'] instanceof Date) {
+              expiryDate = row['Expiry Date'].toISOString().slice(0,10)
+            } else {
+              expiryDate = expiryRaw
+            }
+            const parsedExpiry = new Date(expiryDate)
+            if (isNaN(parsedExpiry.getTime())) {
+              rowErrors.push({ field: 'Expiry Date', msg: `"${expiryRaw}" is not a valid date (use YYYY-MM-DD)` })
+              expiryDate = ''
+            }
+          }
+
+          // Date received
+          let dateReceived = ''
+          if (row['Date Received'] instanceof Date) {
+            dateReceived = row['Date Received'].toISOString().slice(0,10)
+          } else if (typeof row['Date Received'] === 'number') {
+            const d = XLSX.SSF.parse_date_code(row['Date Received'])
+            dateReceived = `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`
+          } else {
+            dateReceived = get('Date Received')
+          }
+
+          const parsed = {
+            genericName:         get('Generic Name'),
+            brandName:           get('Brand Name'),
+            category:            cat,
+            dosageForm:          form,
+            strength:            get('Strength'),
+            manufacturer:        get('Manufacturer'),
+            unitOfMeasure:       uom || 'Piece',
+            piecesPerStrip:      parseInt(get('Pieces/Strip'), 10) || 10,
+            stripsPerBox:        parseInt(get('Strips/Box'), 10) || 1,
+            sellByUnit:          get('Sell by Unit').toLowerCase() === 'yes',
+            stock:               isNaN(stock) ? 0 : stock,
+            reorderLevel:        isNaN(reorder) ? 0 : reorder,
+            maxStock:            parseInt(get('Max Stock'), 10) || 1000,
+            batchNumber:         get('Batch Number'),
+            expiryDate,
+            dateReceived,
+            storageLocation:     get('Storage Location'),
+            storageRequirement:  stor || 'Room Temperature',
+            costPrice:           isNaN(cost) ? 0 : cost,
+            wholesalePrice:      isNaN(whole) ? 0 : whole,
+            sellingPrice:        isNaN(sell) ? 0 : sell,
+            description:         get('Description'),
+            genericSubstitutes:  [],
+            adjustmentLog:       [],
+          }
+
+          if (rowErrors.length > 0) {
+            errors.push({ row: rowNum, data: parsed, rawRow: row, errors: rowErrors })
+          } else {
+            imported.push({ row: rowNum, data: parsed })
+          }
+        })
+
+        resolve({ imported, errors })
+      }
+      reader.readAsBinaryString(file)
+    })
+  }
+
   return {
     drugs, filteredDrugs,
     searchQuery, filterCategory, filterForm, filterStorage,
     DRUG_CATEGORIES, DOSAGE_FORMS, MANUFACTURERS, UNITS_OF_MEASURE, STORAGE_REQUIREMENTS, ADJUSTMENT_REASONS,
     piecesPerBox, stockStatus, expiryStatus, expiryDaysLeft, hasSubstitute, getSubstituteDetails,
     adjustStock, addDrug, updateDrug, deleteDrug,
+    exportInventoryToExcel, downloadImportTemplate, importFromExcel,
   }
 }

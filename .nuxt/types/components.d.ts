@@ -16,6 +16,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 interface _GlobalComponents {
   SidebarNav: typeof import("../../components/SidebarNav.vue")['default']
   TopHeader: typeof import("../../components/TopHeader.vue")['default']
+  InventoryBulkImportModal: typeof import("../../components/inventory/BulkImportModal.vue")['default']
   InventoryDrugDetailDrawer: typeof import("../../components/inventory/DrugDetailDrawer.vue")['default']
   InventoryDrugFormModal: typeof import("../../components/inventory/DrugFormModal.vue")['default']
   InventoryStockAdjustmentModal: typeof import("../../components/inventory/StockAdjustmentModal.vue")['default']
@@ -50,6 +51,7 @@ interface _GlobalComponents {
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
   LazySidebarNav: LazyComponent<typeof import("../../components/SidebarNav.vue")['default']>
   LazyTopHeader: LazyComponent<typeof import("../../components/TopHeader.vue")['default']>
+  LazyInventoryBulkImportModal: LazyComponent<typeof import("../../components/inventory/BulkImportModal.vue")['default']>
   LazyInventoryDrugDetailDrawer: LazyComponent<typeof import("../../components/inventory/DrugDetailDrawer.vue")['default']>
   LazyInventoryDrugFormModal: LazyComponent<typeof import("../../components/inventory/DrugFormModal.vue")['default']>
   LazyInventoryStockAdjustmentModal: LazyComponent<typeof import("../../components/inventory/StockAdjustmentModal.vue")['default']>

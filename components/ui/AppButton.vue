@@ -70,13 +70,13 @@ const sizeClass = computed(() => `btn-${props.size}`)
 }
 
 .btn-secondary {
-  background-color: #f1f5f9;
+  background-color: var(--bg-card);
   color: var(--text-main);
   border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
-  background-color: #e2e8f0;
+  background-color: var(--bg-app);
 }
 
 .btn-text {
