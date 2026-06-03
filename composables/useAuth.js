@@ -52,17 +52,17 @@ const ROLE_ACTIONS = {
 
 // ─── Route permissions ─────────────────────────────────────────
 const ROLE_PERMISSIONS = {
-  [ROLES.ADMIN]: ['/', '/pos', '/inventory', '/prescriptions', '/customers', '/reports', '/settings'],
+  [ROLES.ADMIN]: ['/', '/pos', '/inventory', '/prescriptions', '/customers', '/reports', '/settings', '/audit-trail'],
   [ROLES.PHARMACIST]: ['/', '/pos', '/inventory', '/prescriptions', '/customers'],
   [ROLES.CASHIER]: ['/', '/pos', '/customers'],
-  [ROLES.INVENTORY]: ['/', '/inventory'],
+  [ROLES.INVENTORY]: ['/', '/inventory', '/audit-trail'],
 }
 
 // ─── Sidebar nav visibility ────────────────────────────────────
 const ROLE_NAV_SECTIONS = {
   [ROLES.ADMIN]: {
     core: ['dashboard', 'pos', 'inventory', 'prescriptions'],
-    management: ['customers', 'reports'],
+    management: ['customers', 'reports', 'audit-trail'],
     footer: ['settings'],
   },
   [ROLES.PHARMACIST]: {
@@ -77,7 +77,7 @@ const ROLE_NAV_SECTIONS = {
   },
   [ROLES.INVENTORY]: {
     core: ['dashboard', 'inventory'],
-    management: [],
+    management: ['audit-trail'],
     footer: [],
   },
 }

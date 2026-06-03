@@ -1,5 +1,6 @@
 // ─── useInventory.js ───────────────────────────────────────────────────────
 import * as XLSX from 'xlsx'
+import { useAuditTrail, AUDIT_ACTIONS } from '~/composables/useAuditTrail'
 // Central data composable for the Inventory module.
 
 const DRUG_CATEGORIES = [
@@ -317,6 +318,7 @@ export function useInventory() {
 
   // ── Stock adjustment ───────────────────────────────────────────────────
   const adjustStock = (id, { reason, quantity, notes }) => {
+    const { addLog } = useAuditTrail()
     const idx = drugs.value.findIndex(d => d.id === id)
     if (idx === -1) return
     const drug = drugs.value[idx]
@@ -336,20 +338,57 @@ export function useInventory() {
         },
       ],
     }
+    addLog(AUDIT_ACTIONS.STOCK_ADJUSTED, `${drug.brandName} (${drug.genericName})`, {
+      reason,
+      quantity,
+      notes,
+      stockBefore: drug.stock,
+      stockAfter: newStock,
+    })
   }
 
   // ── CRUD ──────────────────────────────────────────────────────────────
   const addDrug = (data) => {
-    drugs.value.push({ ...data, id: nextId.value++, genericSubstitutes: data.genericSubstitutes || [], adjustmentLog: [] })
+    const { addLog } = useAuditTrail()
+    const newDrug = { ...data, id: nextId.value++, genericSubstitutes: data.genericSubstitutes || [], adjustmentLog: [] }
+    drugs.value.push(newDrug)
+    addLog(AUDIT_ACTIONS.PRODUCT_ADDED, `${data.brandName} (${data.genericName})`, {
+      category: data.category,
+      dosageForm: data.dosageForm,
+      strength: data.strength,
+      initialStock: data.stock,
+    })
   }
 
   const updateDrug = (id, data) => {
+    const { addLog } = useAuditTrail()
     const idx = drugs.value.findIndex(d => d.id === id)
-    if (idx !== -1) drugs.value[idx] = { ...drugs.value[idx], ...data }
+    if (idx === -1) return
+    const before = drugs.value[idx]
+    drugs.value[idx] = { ...before, ...data }
+    // Build a diff of changed fields for the audit details
+    const changed = {}
+    const watchFields = ['genericName', 'brandName', 'category', 'dosageForm', 'strength',
+      'manufacturer', 'stock', 'reorderLevel', 'maxStock', 'costPrice', 'wholesalePrice',
+      'sellingPrice', 'batchNumber', 'expiryDate', 'storageLocation', 'storageRequirement']
+    watchFields.forEach(f => {
+      if (data[f] !== undefined && data[f] !== before[f]) {
+        changed[f] = { from: before[f], to: data[f] }
+      }
+    })
+    addLog(AUDIT_ACTIONS.PRODUCT_EDITED, `${data.brandName || before.brandName} (${data.genericName || before.genericName})`, { changed })
   }
 
   const deleteDrug = (id) => {
+    const { addLog } = useAuditTrail()
+    const drug = drugs.value.find(d => d.id === id)
     drugs.value = drugs.value.filter(d => d.id !== id)
+    if (drug) {
+      addLog(AUDIT_ACTIONS.PRODUCT_DELETED, `${drug.brandName} (${drug.genericName})`, {
+        category: drug.category,
+        stockAtDeletion: drug.stock,
+      })
+    }
   }
 
   // ── Excel: Export inventory ────────────────────────────────────────────────

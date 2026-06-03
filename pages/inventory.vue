@@ -216,11 +216,18 @@ const {
   exportInventoryToExcel, downloadImportTemplate,
 } = useInventory()
 
+const { addLog, AUDIT_ACTIONS } = useAuditTrail()
+
 // ── Bulk import modal ──────────────────────────────────────────────────────
 const showImport = ref(false)
 
 const handleBulkImport = (rows) => {
   rows.forEach(data => addDrug(data))
+  // Log a single summary entry for the entire batch import
+  addLog(AUDIT_ACTIONS.BULK_IMPORT, `${rows.length} product${rows.length !== 1 ? 's' : ''}`, {
+    count: rows.length,
+    products: rows.map(d => `${d.brandName} (${d.genericName})`),
+  })
 }
 
 const formatDate = (iso) => {
